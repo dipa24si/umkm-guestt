@@ -66,7 +66,7 @@
                                 <div class="alert alert-danger">{{ session('error') }}</div>
                             @endif
 
-                            <form action="{{ route('login.post') }}" method="POST">
+                            <form action="{{ route('login.process') }}" method="POST">
                                 @csrf
                                 <div class="mb-3">
                                     <label for="email" class="form-label">Email</label>
@@ -80,7 +80,7 @@
                                     <button type="submit" class="btn btn-primary py-2">Login</button>
                                 </div>
                                 <div class="text-center">
-                                    <p class="small mb-0">Belum punya akun? <a href="{{ route('register') }}" class="text-primary">Daftar sekarang</a></p>
+                                    <p class="small mb-0">Belum punya akun? <a href="{{ url('/register') }}" class="text-primary">Daftar sekarang</a></p>
                                 </div>
                             </form>
                         </div>

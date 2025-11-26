@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>UMKM - Bootstrap Restaurant Template</title>
+    <title>UMKM</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <meta content="" name="keywords">
     <meta content="" name="description">
@@ -63,19 +63,27 @@
                         class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
                     <a href="{{ route('warga.index') }}"
                         class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Warga</a>
-                    <a href="menu.html"
-                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Menu</a>
+                    <a href="{{ url('/ulasan') }}"
+                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Ulasan</a>
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
-                        <div class="dropdown-menu m-0">
-                            <a href="booking.html" class="dropdown-item">Booking</a>
-                            <a href="team.html" class="dropdown-item">Our Team</a>
-                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                        </div>
+                        @auth
+                            <div class="nav-item dropdown user-dropdown">
+                                <a href="#" class="nav-link dropdown-toggle text-uppercase" data-bs-toggle="dropdown">
+                                    {{ auth()->user()->name }}
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end">
+                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-danger fw-bold">
+                                            <i class="fa fa-sign-out-alt me-2"></i> Logout
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        @endauth
                     </div>
                     <a href="contact.html" class="nav-item nav-link">Contact</a>
                 </div>
-                <a href="" class="btn btn-primary py-2 px-4">Book A Table</a>
             </div>
         </nav>
 
@@ -83,12 +91,26 @@
             <div class="container my-5 py-5">
                 <div class="row align-items-center g-5">
                     <div class="col-lg-6 text-center text-lg-start">
-                        <h1 class="display-3 text-white animated slideInLeft">Enjoy Our<br>Delicious Meal</h1>
-                        <p class="text-white animated slideInLeft mb-4 pb-2">Tempor erat elitr rebum at clita. Diam
-                            dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit, sed
-                            stet lorem sit clita duo justo magna dolore erat amet</p>
-                        <a href="" class="btn btn-primary py-sm-3 px-sm-5 me-3 animated slideInLeft">Book A
-                            Table</a>
+                        <h1 class="display-3 text-white animated slideInLeft">
+                            Dukung UMKM<br>Lokal Indonesia
+                        </h1>
+
+                        <p class="text-white animated slideInLeft mb-4 pb-2">
+                            Temukan data warga pelaku UMKM serta berbagai produk lokal yang dapat Anda beli untuk
+                            mendukung ekonomi masyarakat.
+                        </p>
+
+                        <div class="d-flex flex-wrap">
+                            <a href="{{ route('warga.index') }}"
+                                class="btn btn-primary py-sm-3 px-sm-5 me-3 mb-2 animated slideInLeft">
+                                LIHAT WARGA UMKM
+                            </a>
+
+                            <a href="{{ route('ulasan.index') }}"
+                                class="btn btn-primary py-sm-3 px-sm-5 mb-2 animated slideInLeft">
+                                LIHAT PRODUK & ULASAN
+                            </a>
+                        </div>
                     </div>
                     <div class="col-lg-6 text-center text-lg-end overflow-hidden">
                         <img class="img-fluid" src="{{ asset('assets/guest/img/hero.png') }}" alt="">

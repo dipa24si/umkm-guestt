@@ -4,34 +4,35 @@
 <head>
     <meta charset="utf-8">
     <title>UMKM</title>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="" name="keywords">
+        <meta content="" name="description">
 
-    <!-- Favicon -->
-    <link href="img/favicon.ico" rel="icon">
+        <!-- Favicon -->
+        <link href="img/favicon.ico" rel="icon">
 
-    <!-- Google Web Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
-        rel="stylesheet">
+        <!-- Google Web Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
+            rel="stylesheet">
 
-    <!-- Icon Font Stylesheet -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+        <!-- Icon Font Stylesheet -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-    <!-- Libraries Stylesheet -->
-    <link href="{{ asset('assets/guest/lib/animate/animate.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/guest/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/guest/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
+        <!-- Libraries Stylesheet -->
+        <link href="{{ asset('assets/guest/lib/animate/animate.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/guest/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+        <link href="{{ asset('assets/guest/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
+            rel="stylesheet" />
 
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="{{ asset('assets/guest/css/bootstrap.min.css') }}" rel="stylesheet">
+        <!-- Customized Bootstrap Stylesheet -->
+        <link href="{{ asset('assets/guest/css/bootstrap.min.css') }}" rel="stylesheet">
 
-    <!-- Template Stylesheet -->
-    <link href="{{ asset('assets/guest/css/style.css') }}" rel="stylesheet">
+        <!-- Template Stylesheet -->
+        <link href="{{ asset('assets/guest/css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -59,30 +60,40 @@
                 <div class="navbar-nav ms-auto py-0 pe-4">
                     <a href="{{ route('dashboard') }}"
                         class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Home</a>
+
                     <a href="{{ route('about') }}"
                         class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
+
                     <a href="{{ route('warga.index') }}"
-                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Warga</a>
-                    <a href="{{ url('/ulasan') }}"
-                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Ulasan</a>
-                    <div class="nav-item dropdown">
-                        @auth
-                            <div class="nav-item dropdown user-dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-uppercase" data-bs-toggle="dropdown">
-                                    {{ auth()->user()->name }}
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger fw-bold">
-                                            <i class="fa fa-sign-out-alt me-2"></i> Logout
-                                        </button>
-                                    </form>
-                                </div>
+                        class="nav-item nav-link {{ request()->routeIs('warga.*') ? 'active' : '' }}">Warga</a>
+
+                    <a href="{{ route('ulasan.index') }}"
+                        class="nav-item nav-link {{ request()->routeIs('ulasan.*') ? 'active' : '' }}">Ulasan</a>
+
+                    {{-- BELUM LOGIN --}}
+                    @guest
+                        <a href="{{ route('login') }}" class="nav-item nav-link">Login</a>
+                        <a href="{{ route('register') }}" class="nav-item nav-link">Register</a>
+                    @endguest
+
+                    {{-- SUDAH LOGIN --}}
+                    @auth
+                        <div class="nav-item dropdown user-dropdown">
+                            <a href="#" class="nav-link dropdown-toggle text-uppercase" data-bs-toggle="dropdown">
+                                {{ auth()->user()->name }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger fw-bold">
+                                        <i class="fa fa-sign-out-alt me-2"></i> Logout
+                                    </button>
+                                </form>
                             </div>
-                        @endauth
-                    </div>
-                    <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        </div>
+                    @endauth
+
+                    <a href="#contact" class="nav-item nav-link">Contact</a>
                 </div>
             </div>
         </nav>
@@ -121,61 +132,86 @@
     </div>
     <!-- Navbar & Hero End -->
 
-    <div class="container py-5">
-        <div class="card shadow-lg border-0 rounded-4">
-            <div class="card-body">
-                <h3 class="text-center mb-4 text-primary">Tambah Data Warga</h3>
+    <!-- Ulasan Produk Section Start -->
+    <div class="container-xxl py-5 bg-light">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h5 class="section-title ff-secondary text-center text-primary fw-normal">Ulasan Produk</h5>
+                <h1 class="mb-5">Daftar Ulasan Produk</h1>
+            </div>
 
-                <form action="{{ route('warga.store') }}" method="POST">
-                    @csrf
+            <div class="text-center mb-4">
+                @auth
+                    <a href="{{ route('ulasan.create') }}" class="btn btn-success">
+                        <i class="fa fa-plus"></i> Tambah Ulasan
+                    </a>
+                @endauth
+            </div>
 
-                    <div class="mb-3">
-                        <label for="no_ktp" class="form-label">No KTP</label>
-                        <input type="text" name="no_ktp" id="no_ktp" class="form-control" required>
+            <div class="row g-4">
+                @forelse ($ulasan as $item)
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="card shadow-sm border-0 rounded-4">
+                            <div class="card-body p-4">
+
+                                <!-- Icon -->
+                                <div class="text-center mb-3">
+                                    <i class="fa fa-star fa-3x text-warning"></i>
+                                </div>
+
+                                <!-- Produk -->
+                                <h5 class="card-title text-center mb-2">
+                                    {{ $item->produk->nama_produk ?? 'Produk Tidak Ditemukan' }}
+                                </h5>
+
+                                <!-- Rating bintang -->
+                                <p class="text-center mb-2">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        <i
+                                            class="fa fa-star {{ $i <= $item->rating ? 'text-warning' : 'text-secondary' }}"></i>
+                                    @endfor
+                                </p>
+
+                                <!-- Komentar -->
+                                <p class="small text-muted mb-2">"{{ $item->komentar }}"</p>
+
+                                <!-- Nama warga -->
+                                <p class="small text-secondary mb-3">
+                                    <i class="fa fa-user"></i>
+                                    {{ $item->warga->nama ?? 'Anonim' }}
+                                </p>
+
+                                <!-- Tombol aksi -->
+                                <div class="text-center">
+                                    <a href="{{ route('ulasan.edit', $item->ulasan_id) }}"
+                                        class="btn btn-sm btn-primary">
+                                        Edit
+                                    </a>
+
+                                    <form action="{{ route('ulasan.destroy', $item->ulasan_id) }}" method="POST"
+                                        class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Yakin ingin menghapus ulasan ini?')">
+                                            Hapus
+                                        </button>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" name="nama" id="nama" class="form-control" required>
+                @empty
+                    <div class="col-12 text-center">
+                        <p class="text-muted">Belum ada ulasan produk yang ditambahkan.</p>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required>
-                            <option value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="agama" class="form-label">Agama</label>
-                        <input type="text" name="agama" id="agama" class="form-control" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="pekerjaan" class="form-label">Pekerjaan</label>
-                        <input type="text" name="pekerjaan" id="pekerjaan" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="telp" class="form-label">No Telepon</label>
-                        <input type="text" name="telp" id="telp" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control">
-                    </div>
-
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-primary px-4">Simpan</button>
-                        <a href="{{ route('warga.index') }}" class="btn btn-secondary px-4">Batal</a>
-                    </div>
-                </form>
+                @endforelse
             </div>
         </div>
     </div>
+    <!-- Ulasan Produk Section End -->
+
 
 
     <!-- Footer Start -->
@@ -265,9 +301,31 @@
     <script src="{{ asset('assets/guest/lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/guest/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('assets/guest/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Template Javascript -->
     <script src="{{ asset('assets/guest/js/main.js') }}"></script>
+
+    {{-- Floating WhatsApp Button --}}
+    <a href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20bertanya%20tentang%20UMKM" target="_blank"
+        aria-label="Chat via WhatsApp"
+        style="
+       position: fixed;
+       bottom: 25px;
+       left: 25px;
+       width: 65px;
+       height: 65px;
+       background: #25D366;
+       color: #fff;
+       border-radius: 50%;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       font-size: 32px;
+       z-index: 99999;
+       box-shadow: 0 0 15px rgba(0,0,0,.3);
+   ">
+        <i class="fab fa-whatsapp"></i>
+    </a>
 </body>
 
 </html>

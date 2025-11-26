@@ -59,30 +59,40 @@
                 <div class="navbar-nav ms-auto py-0 pe-4">
                     <a href="{{ route('dashboard') }}"
                         class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Home</a>
+
                     <a href="{{ route('about') }}"
                         class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
+
                     <a href="{{ route('warga.index') }}"
-                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Warga</a>
-                    <a href="{{ url('/ulasan') }}"
-                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Ulasan</a>
-                    <div class="nav-item dropdown">
-                        @auth
-                            <div class="nav-item dropdown user-dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-uppercase" data-bs-toggle="dropdown">
-                                    {{ auth()->user()->name }}
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger fw-bold">
-                                            <i class="fa fa-sign-out-alt me-2"></i> Logout
-                                        </button>
-                                    </form>
-                                </div>
+                        class="nav-item nav-link {{ request()->routeIs('warga.*') ? 'active' : '' }}">Warga</a>
+
+                    <a href="{{ route('ulasan.index') }}"
+                        class="nav-item nav-link {{ request()->routeIs('ulasan.*') ? 'active' : '' }}">Ulasan</a>
+
+                    {{-- guest: tampilkan Login & Register --}}
+                    @guest
+                        <a href="{{ route('login') }}" class="nav-item nav-link">Login</a>
+                        <a href="{{ route('register') }}" class="nav-item nav-link">Register</a>
+                    @endguest
+
+                    {{-- sudah login: tampilkan nama user + dropdown logout --}}
+                    @auth
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                {{ auth()->user()->name ?? auth()->user()->email }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger fw-bold">
+                                        <i class="fa fa-sign-out-alt me-2"></i> Logout
+                                    </button>
+                                </form>
                             </div>
-                        @endauth
-                    </div>
-                    <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        </div>
+                    @endauth
+
+                    <a href="#contact" class="nav-item nav-link">Contact</a>
                 </div>
             </div>
         </nav>
@@ -124,58 +134,58 @@
     <div class="container py-5">
         <div class="card shadow-lg border-0 rounded-4">
             <div class="card-body">
-                <h3 class="text-center mb-4 text-primary">Tambah Data Warga</h3>
+                <h3 class="text-center mb-4 text-primary">Tambah Ulasan Produk</h3>
 
-                <form action="{{ route('warga.store') }}" method="POST">
+                @if (session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
+
+                <form action="{{ route('ulasan.store') }}" method="POST">
                     @csrf
 
+                    <!-- Isi Manual Produk ID -->
                     <div class="mb-3">
-                        <label for="no_ktp" class="form-label">No KTP</label>
-                        <input type="text" name="no_ktp" id="no_ktp" class="form-control" required>
+                        <label class="form-label">Produk ID</label>
+                        <input type="number" name="produk_id" class="form-control" required>
                     </div>
 
+                    <!-- Isi Manual Warga ID -->
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" name="nama" id="nama" class="form-control" required>
+                        <label class="form-label">Warga ID</label>
+                        <input type="number" name="warga_id" class="form-control" required>
                     </div>
 
+                    <!-- Rating -->
                     <div class="mb-3">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required>
-                            <option value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
+                        <label class="form-label">Rating (1–5)</label>
+                        <select name="rating" class="form-select" required>
+                            <option value="">-- Pilih Rating --</option>
+                            @for ($i = 1; $i <= 5; $i++)
+                                <option value="{{ $i }}">{{ $i }} ⭐</option>
+                            @endfor
                         </select>
                     </div>
 
+                    <!-- Komentar -->
                     <div class="mb-3">
-                        <label for="agama" class="form-label">Agama</label>
-                        <input type="text" name="agama" id="agama" class="form-control" required>
+                        <label class="form-label">Komentar</label>
+                        <textarea name="komentar" rows="4" class="form-control" required></textarea>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="pekerjaan" class="form-label">Pekerjaan</label>
-                        <input type="text" name="pekerjaan" id="pekerjaan" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="telp" class="form-label">No Telepon</label>
-                        <input type="text" name="telp" id="telp" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control">
-                    </div>
-
+                    <!-- Tombol -->
                     <div class="text-center">
                         <button type="submit" class="btn btn-primary px-4">Simpan</button>
-                        <a href="{{ route('warga.index') }}" class="btn btn-secondary px-4">Batal</a>
+                        <a href="{{ route('ulasan.index') }}" class="btn btn-secondary px-4">Batal</a>
                     </div>
+
                 </form>
             </div>
         </div>
     </div>
+
 
 
     <!-- Footer Start -->

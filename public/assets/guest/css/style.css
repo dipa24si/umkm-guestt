@@ -142,7 +142,7 @@
         z-index: 999;
         background: transparent !important;
     }
-    
+
     .sticky-top.navbar-dark {
         position: fixed;
         background: var(--dark) !important;
@@ -162,13 +162,13 @@
     animation: imgRotate 50s linear infinite;
 }
 
-@keyframes imgRotate { 
-    100% { 
-        transform: rotate(360deg); 
-    } 
+@keyframes imgRotate {
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
-.breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-item+.breadcrumb-item::before {
     color: rgba(255, 255, 255, .5);
 }
 
@@ -476,4 +476,37 @@
     margin-right: 0;
     padding-right: 0;
     border-right: none;
+}
+
+/* Dropdown user di navbar */
+.navbar-dark .user-dropdown .dropdown-menu {
+    background-color: #0F172B !important;
+    /* gelap, nyatu dengan navbar */
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    min-width: 140px;
+
+    /* ini yang paling penting untuk jarak */
+    top: 100% !important;
+    /* tepat di bawah link */
+    transform: translate3d(0, 0, 0) !important;
+    /* matikan offset popper */
+    margin-top: 0 !important;
+}
+
+/* item di dalam dropdown */
+.navbar-dark .user-dropdown .dropdown-item {
+    padding: 4px 0 !important;
+    font-size: 13px !important;
+    color: #F1F8FF !important;
+    background-color: transparent !important;
+}
+
+.navbar-dark .user-dropdown .dropdown-item.text-danger {
+    color: #f87171 !important;
+}
+
+.navbar-dark .user-dropdown .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.06) !important;
 }

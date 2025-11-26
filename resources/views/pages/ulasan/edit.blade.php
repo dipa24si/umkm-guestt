@@ -59,124 +59,130 @@
                 <div class="navbar-nav ms-auto py-0 pe-4">
                     <a href="{{ route('dashboard') }}"
                         class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Home</a>
+
                     <a href="{{ route('about') }}"
                         class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
+
                     <a href="{{ route('warga.index') }}"
-                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Warga</a>
-                    <a href="{{ url('/ulasan') }}"
-                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Ulasan</a>
-                    <div class="nav-item dropdown">
-                        @auth
-                            <div class="nav-item dropdown user-dropdown">
-                                <a href="#" class="nav-link dropdown-toggle text-uppercase" data-bs-toggle="dropdown">
-                                    {{ auth()->user()->name }}
-                                </a>
-                                <div class="dropdown-menu dropdown-menu-end">
-                                    <form action="{{ route('logout') }}" method="POST" class="m-0">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item text-danger fw-bold">
-                                            <i class="fa fa-sign-out-alt me-2"></i> Logout
-                                        </button>
-                                    </form>
-                                </div>
+                        class="nav-item nav-link {{ request()->routeIs('warga.*') ? 'active' : '' }}">Warga</a>
+
+                    <a href="{{ route('ulasan.index') }}"
+                        class="nav-item nav-link {{ request()->routeIs('ulasan.*') ? 'active' : '' }}">Ulasan</a>
+
+                    {{-- guest: tampilkan Login & Register --}}
+                    @guest
+                        <a href="{{ route('login') }}" class="nav-item nav-link">Login</a>
+                        <a href="{{ route('register') }}" class="nav-item nav-link">Register</a>
+                    @endguest
+
+                    {{-- sudah login: tampilkan nama user + dropdown logout --}}
+                    @auth
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                {{ auth()->user()->name ?? auth()->user()->email }}
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item text-danger fw-bold">
+                                        <i class="fa fa-sign-out-alt me-2"></i> Logout
+                                    </button>
+                                </form>
                             </div>
-                        @endauth
-                    </div>
-                    <a href="contact.html" class="nav-item nav-link">Contact</a>
+                        </div>
+                    @endauth
+                    <a href="#contact" class="nav-item nav-link">Contact</a>
                 </div>
             </div>
-        </nav>
+    </div>
+    </nav>
 
-        <div class="container-xxl py-5 bg-dark hero-header mb-5">
-            <div class="container my-5 py-5">
-                <div class="row align-items-center g-5">
-                    <div class="col-lg-6 text-center text-lg-start">
-                        <h1 class="display-3 text-white animated slideInLeft">
-                            Dukung UMKM<br>Lokal Indonesia
-                        </h1>
+    <div class="container-xxl py-5 bg-dark hero-header mb-5">
+        <div class="container my-5 py-5">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6 text-center text-lg-start">
+                    <h1 class="display-3 text-white animated slideInLeft">
+                        Dukung UMKM<br>Lokal Indonesia
+                    </h1>
 
-                        <p class="text-white animated slideInLeft mb-4 pb-2">
-                            Temukan data warga pelaku UMKM serta berbagai produk lokal yang dapat Anda beli untuk
-                            mendukung ekonomi masyarakat.
-                        </p>
+                    <p class="text-white animated slideInLeft mb-4 pb-2">
+                        Temukan data warga pelaku UMKM serta berbagai produk lokal yang dapat Anda beli untuk
+                        mendukung ekonomi masyarakat.
+                    </p>
 
-                        <div class="d-flex flex-wrap">
-                            <a href="{{ route('warga.index') }}"
-                                class="btn btn-primary py-sm-3 px-sm-5 me-3 mb-2 animated slideInLeft">
-                                LIHAT WARGA UMKM
-                            </a>
+                    <div class="d-flex flex-wrap">
+                        <a href="{{ route('warga.index') }}"
+                            class="btn btn-primary py-sm-3 px-sm-5 me-3 mb-2 animated slideInLeft">
+                            LIHAT WARGA UMKM
+                        </a>
 
-                            <a href="{{ route('ulasan.index') }}"
-                                class="btn btn-primary py-sm-3 px-sm-5 mb-2 animated slideInLeft">
-                                LIHAT PRODUK & ULASAN
-                            </a>
-                        </div>
+                        <a href="{{ route('ulasan.index') }}"
+                            class="btn btn-primary py-sm-3 px-sm-5 mb-2 animated slideInLeft">
+                            LIHAT PRODUK & ULASAN
+                        </a>
                     </div>
-                    <div class="col-lg-6 text-center text-lg-end overflow-hidden">
-                        <img class="img-fluid" src="{{ asset('assets/guest/img/hero.png') }}" alt="">
-                    </div>
+                </div>
+                <div class="col-lg-6 text-center text-lg-end overflow-hidden">
+                    <img class="img-fluid" src="{{ asset('assets/guest/img/hero.png') }}" alt="">
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <!-- Navbar & Hero End -->
 
     <div class="container py-5">
         <div class="card shadow-lg border-0 rounded-4">
             <div class="card-body">
-                <h3 class="text-center mb-4 text-primary">Tambah Data Warga</h3>
+                <h3 class="text-center mb-4 text-primary">Edit Ulasan Produk</h3>
 
-                <form action="{{ route('warga.store') }}" method="POST">
+                <form action="{{ route('ulasan.update', $ulasan->ulasan_id) }}" method="POST">
                     @csrf
+                    @method('PUT')
 
+                    <!-- Pilih Produk -->
                     <div class="mb-3">
-                        <label for="no_ktp" class="form-label">No KTP</label>
-                        <input type="text" name="no_ktp" id="no_ktp" class="form-control" required>
+                        <label class="form-label">Produk ID</label>
+                        <input type="number" name="produk_id" class="form-control"
+                            value="{{ old('produk_id', $ulasan->produk_id) }}" required>
                     </div>
 
+                    <!-- Pilih Warga -->
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" name="nama" id="nama" class="form-control" required>
+                        <label class="form-label">Warga ID</label>
+                        <input type="number" name="warga_id" class="form-control"
+                            value="{{ old('warga_id', $ulasan->warga_id) }}" required>
                     </div>
 
+                    <!-- Rating -->
                     <div class="mb-3">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required>
-                            <option value="">-- Pilih Jenis Kelamin --</option>
-                            <option value="Laki-laki">Laki-laki</option>
-                            <option value="Perempuan">Perempuan</option>
+                        <label class="form-label">Rating (1–5)</label>
+                        <select name="rating" class="form-select" required>
+                            <option value="">-- Pilih Rating --</option>
+                            @for ($i = 1; $i <= 5; $i++)
+                                <option value="{{ $i }}" {{ $i == $ulasan->rating ? 'selected' : '' }}>
+                                    {{ $i }} ⭐
+                                </option>
+                            @endfor
                         </select>
                     </div>
 
+                    <!-- Komentar -->
                     <div class="mb-3">
-                        <label for="agama" class="form-label">Agama</label>
-                        <input type="text" name="agama" id="agama" class="form-control" required>
+                        <label class="form-label">Komentar</label>
+                        <textarea name="komentar" rows="4" class="form-control" required>{{ $ulasan->komentar }}</textarea>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="pekerjaan" class="form-label">Pekerjaan</label>
-                        <input type="text" name="pekerjaan" id="pekerjaan" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="telp" class="form-label">No Telepon</label>
-                        <input type="text" name="telp" id="telp" class="form-control">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control">
-                    </div>
-
+                    <!-- Tombol -->
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary px-4">Simpan</button>
-                        <a href="{{ route('warga.index') }}" class="btn btn-secondary px-4">Batal</a>
+                        <button type="submit" class="btn btn-primary px-4">Update</button>
+                        <a href="{{ route('ulasan.index') }}" class="btn btn-secondary px-4">Batal</a>
                     </div>
+
                 </form>
             </div>
         </div>
     </div>
-
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">

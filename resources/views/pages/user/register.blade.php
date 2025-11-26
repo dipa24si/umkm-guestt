@@ -63,12 +63,22 @@
             <div class="alert alert-danger text-center">{{ session('error') }}</div>
         @endif
 
-        <form action="{{ route('register.post') }}" method="POST">
+        @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+        <form action="{{ route('register') }}" method="POST">
             @csrf
             <div class="mb-3">
-                <label for="nama" class="form-label">Nama Lengkap</label>
-                <input type="text" name="nama" id="nama" class="form-control" value="{{ old('nama') }}" required>
-                @error('nama') <small class="text-danger">{{ $message }}</small> @enderror
+                <label for="name" class="form-label">Nama Lengkap</label>
+                <input type="text" name="name" id="name" class="form-control" value="{{ old('name') }}" required>
+                @error('name') <small class="text-danger">{{ $message }}</small> @enderror
             </div>
 
             <div class="mb-3">
