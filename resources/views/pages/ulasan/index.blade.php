@@ -92,8 +92,10 @@
                             </div>
                         </div>
                     @endauth
-
-                    <a href="#contact" class="nav-item nav-link">Contact</a>
+                    <a href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20bertanya%20tentang%20UMKM"
+                        target="_blank" class="nav-item nav-link">
+                        Contact
+                    </a>
                 </div>
             </div>
         </nav>
