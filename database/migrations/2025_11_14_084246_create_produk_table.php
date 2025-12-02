@@ -9,19 +9,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('produk', function (Blueprint $table) {
-            $table->bigIncrements('produk_id'); // Primary Key
-            $table->unsignedBigInteger('umkm_id'); // Foreign Key ke tabel UMKM
-
+            $table->id('produk_id');
             $table->string('nama_produk');
             $table->text('deskripsi')->nullable();
-            $table->decimal('harga', 12, 2); // harga DECIMAL
+            $table->decimal('harga', 12, 2);
             $table->integer('stok')->default(0);
             $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
-
             $table->timestamps();
-
-            // foreign key
-            $table->foreign('umkm_id')->references('umkm_id')->on('umkm')->onDelete('cascade');
         });
     }
 
