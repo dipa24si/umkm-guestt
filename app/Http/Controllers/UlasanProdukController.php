@@ -15,7 +15,7 @@ class UlasanProdukController extends Controller
     {
         $ulasan = UlasanProduk::with(['produk', 'warga'])
             ->orderBy('created_at', 'desc')
-            ->paginate(5) // <-- PENTING: paginate, BUKAN get()
+            ->paginate(10) // <-- PENTING: paginate, BUKAN get()
             ->onEachSide(1)
             ->withQueryString();
 
