@@ -54,4 +54,3 @@ class Warga extends Model
         });
     }
 }
-

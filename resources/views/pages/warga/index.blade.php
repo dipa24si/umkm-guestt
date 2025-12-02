@@ -127,7 +127,6 @@
     <!-- Navbar & Hero End -->
 
     <!-- Warga Section Start -->
-    <!-- Warga Section Start -->
     <div class="container-xxl py-5 bg-light">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
@@ -233,7 +232,6 @@
         </div>
     </div>
     <!-- Warga Section End -->
-
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
