@@ -4,35 +4,34 @@
 <head>
     <meta charset="utf-8">
     <title>UMKM</title>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport">
-        <meta content="" name="keywords">
-        <meta content="" name="description">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
 
-        <!-- Favicon -->
-        <link rel="icon" type="image/jpeg" href="{{ asset('assets/guest/img/favicon.jpg') }}">
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="{{ asset('assets/guest/img/favicon.jpg') }}">
 
-        <!-- Google Web Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link
-            href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
-            rel="stylesheet">
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&family=Pacifico&display=swap"
+        rel="stylesheet">
 
-        <!-- Icon Font Stylesheet -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-        <!-- Libraries Stylesheet -->
-        <link href="{{ asset('assets/guest/lib/animate/animate.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('assets/guest/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('assets/guest/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}"
-            rel="stylesheet" />
+    <!-- Libraries Stylesheet -->
+    <link href="{{ asset('assets/guest/lib/animate/animate.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/guest/lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/guest/lib/tempusdominus/css/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
 
-        <!-- Customized Bootstrap Stylesheet -->
-        <link href="{{ asset('assets/guest/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{{ asset('assets/guest/css/bootstrap.min.css') }}" rel="stylesheet">
 
-        <!-- Template Stylesheet -->
-        <link href="{{ asset('assets/guest/css/style.css') }}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <link href="{{ asset('assets/guest/css/style.css') }}" rel="stylesheet">
 </head>
 
 <body>
@@ -49,9 +48,10 @@
     <!-- Navbar & Hero Start -->
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-            <a href="" class="navbar-brand p-0">
-                <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>UMKM</h1>
-                <!-- <img src="img/logo.png" alt="Logo"> -->
+            <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
+                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM"
+                    style="height: 40px; width: auto;" class="me-2">
+                <h1 class="text-primary m-0">UMKM</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>
@@ -208,6 +208,17 @@
                     </div>
                 @endforelse
             </div>
+            @if ($ulasan instanceof \Illuminate\Pagination\LengthAwarePaginator)
+                <div class="mt-4 text-center">
+                    <div class="text-muted small mb-2">
+                        Showing {{ $ulasan->firstItem() }} to {{ $ulasan->lastItem() }} of {{ $ulasan->total() }}
+                        results
+                    </div>
+                    <div class="d-inline-block">
+                        {{ $ulasan->links('pagination::bootstrap-5') }}
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
     <!-- Ulasan Produk Section End -->

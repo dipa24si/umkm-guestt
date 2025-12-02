@@ -48,9 +48,10 @@
     <!-- Navbar & Hero Start -->
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-            <a href="" class="navbar-brand p-0">
-                <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>UMKM</h1>
-                <!-- <img src="img/logo.png" alt="Logo"> -->
+            <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
+                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM"
+                    style="height: 40px; width: auto;" class="me-2">
+                <h1 class="text-primary m-0">UMKM</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>

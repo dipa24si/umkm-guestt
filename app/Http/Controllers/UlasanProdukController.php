@@ -11,9 +11,14 @@ class UlasanProdukController extends Controller
     /**
      * Tampilkan semua ulasan
      */
-    public function index()
+    public function index(Request $request)
     {
-        $ulasan = UlasanProduk::with(['produk', 'warga'])->get();
+        $ulasan = UlasanProduk::with(['produk', 'warga'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(5) // <-- PENTING: paginate, BUKAN get()
+            ->onEachSide(1)
+            ->withQueryString();
+
         return view('pages.ulasan.index', compact('ulasan'));
     }
 

@@ -22,7 +22,7 @@ class AuthController extends Controller
      */
     public function showLoginForm()
     {
-        return view('guest.login.login'); // ini view form login kamu
+        return view('pages.user.login'); // ini view form login kamu
     }
 
     /**
@@ -37,16 +37,16 @@ class AuthController extends Controller
 
         // coba login
         if (Auth::attempt($credentials)) {
-            $request->session()->regenerate(); // penting
+            $request->session()->regenerate();
 
-            return redirect()->intended(route('dashboard'))
-                ->with('success', 'Login berhasil!');
+            // redirect langsung ke URL /dashboard
+            return redirect('/dashboard')->with('success', 'Login berhasil!');
+            // atau kalau mau tetap pakai nama route:
+            // return redirect()->route('dashboard')->with('success', 'Login berhasil!');
         }
 
-        // gagal login
-        return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->onlyInput('email');
+        // kalau gagal, kirim pesan ke session('error'), sesuai dengan yang dipakai di view
+        return back()->with('error', 'Email atau password salah.')->withInput();
     }
 
     /**

@@ -7,7 +7,7 @@
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <!-- Favicon -->
-    <link href="{{ asset('assets/guest/img/favicon.ico') }}" rel="icon">
+    <link rel="icon" type="image/jpeg" href="{{ asset('assets/guest/img/favicon.jpg') }}">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -34,8 +34,10 @@
     <div class="container-xxl position-relative p-0">
         <!-- Navbar Start -->
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-            <a href="{{ route('dashboard') }}" class="navbar-brand p-0">
-                <h1 class="text-primary m-0"><i class="fa fa-utensils me-3"></i>UMKM</h1>
+           <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
+                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM"
+                    style="height: 40px; width: auto;" class="me-2">
+                <h1 class="text-primary m-0">UMKM</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>

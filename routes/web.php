@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AboutController;
-use App\Http\Controllers\WargaController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UlasanProdukController;
+use App\Http\Controllers\WargaController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('pages.dashboard');
@@ -14,7 +14,6 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 Route::get('/about', [AboutController::class, 'about'])->name('about');
-
 
 // ================== WARGA ==================
 // index boleh diakses semua orang
@@ -29,16 +28,20 @@ Route::middleware('auth')->group(function () {
     Route::delete('/warga/{id}', [WargaController::class, 'destroy'])->name('warga.destroy');
 });
 
-
 // ================== AUTH ==================
-Route::get('/login', [AuthController::class, 'index'])->name('login');
+
+// TAMPILKAN FORM LOGIN
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+
+// PROSES LOGIN
 Route::post('/login', [AuthController::class, 'login'])->name('login.process');
 
+// REGISTER
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.process');
 
+// LOGOUT
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
 
 // ================== ULASAN ==================
 // halaman list ulasan boleh dilihat semua
