@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,9 +8,9 @@ class UlasanProduk extends Model
 {
     use HasFactory;
 
-    protected $table = 'ulasan';
+    protected $table      = 'ulasan';
     protected $primaryKey = 'ulasan_id';
-    public $timestamps = true;
+    public $timestamps    = true;
 
     protected $fillable = [
         'produk_id',
@@ -31,4 +30,12 @@ class UlasanProduk extends Model
     {
         return $this->belongsTo(User::class, 'warga_id');
     }
+
+    public function medias()
+    {
+        return $this->hasMany(\App\Models\Media::class, 'ref_id', 'ulasan_id')
+            ->where('ref_table', 'ulasan_produk')
+            ->orderBy('sort_order');
+    }
+
 }

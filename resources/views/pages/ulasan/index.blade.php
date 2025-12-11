@@ -5,8 +5,6 @@
     <meta charset="utf-8">
     <title>UMKM</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta content="" name="keywords">
-    <meta content="" name="description">
 
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('assets/guest/img/favicon.jpg') }}">
@@ -35,16 +33,6 @@
 </head>
 
 <body>
-    {{-- <div class="container-xxl bg-white p-0">
-        <!-- Spinner Start -->
-        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </div>
-        <!-- Spinner End --> --}}
-
-
     <!-- Navbar & Hero Start -->
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
@@ -70,13 +58,11 @@
                     <a href="{{ route('ulasan.index') }}"
                         class="nav-item nav-link {{ request()->routeIs('ulasan.*') ? 'active' : '' }}">Ulasan</a>
 
-                    {{-- BELUM LOGIN --}}
                     @guest
                         <a href="{{ route('login') }}" class="nav-item nav-link">Login</a>
                         <a href="{{ route('register') }}" class="nav-item nav-link">Register</a>
                     @endguest
 
-                    {{-- SUDAH LOGIN --}}
                     @auth
                         <div class="nav-item dropdown user-dropdown">
                             <a href="#" class="nav-link dropdown-toggle text-uppercase" data-bs-toggle="dropdown">
@@ -92,6 +78,7 @@
                             </div>
                         </div>
                     @endauth
+
                     <a href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20bertanya%20tentang%20UMKM"
                         target="_blank" class="nav-item nav-link">
                         Contact
@@ -156,6 +143,22 @@
                         <div class="card shadow-sm border-0 rounded-4">
                             <div class="card-body p-4">
 
+                                <!-- optional thumbnails (up to 3) -->
+                                @php
+                                    // if controller eager-loaded medias -> use $item->medias
+                                    $medias = $item->medias ?? collect();
+                                @endphp
+
+                                @if ($medias->count())
+                                    <div class="d-flex justify-content-center gap-2 mb-3">
+                                        @foreach ($medias->take(3) as $m)
+                                            <img src="{{ asset('storage/media/ulasan_produk/' . $m->file_name) }}"
+                                                alt="{{ $m->caption ?? '' }}"
+                                                style="width:60px; height:45px; object-fit:cover; border-radius:6px;">
+                                        @endforeach
+                                    </div>
+                                @endif
+
                                 <!-- Icon -->
                                 <div class="text-center mb-3">
                                     <i class="fa fa-star fa-3x text-warning"></i>
@@ -210,6 +213,7 @@
                     </div>
                 @endforelse
             </div>
+
             @if ($ulasan instanceof \Illuminate\Pagination\LengthAwarePaginator)
                 <div class="mt-4 text-center">
                     <div class="text-muted small mb-2">
@@ -224,8 +228,6 @@
         </div>
     </div>
     <!-- Ulasan Produk Section End -->
-
-
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
@@ -272,40 +274,16 @@
                 </div>
             </div>
         </div>
-        <div class="container">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#">Your Site Name</a>, All Right Reserved.
-
-                        <!--/*** This template is free as long as you keep the footer author’s credit link/attribution link/backlink. If you'd like to use the template without the footer author’s credit link/attribution link/backlink, you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". Thank you for your support. ***/-->
-                        Designed By <a class="border-bottom" href="https://htmlcodex.com">HTML Codex</a><br><br>
-                        Distributed By <a class="border-bottom" href="https://themewagon.com"
-                            target="_blank">ThemeWagon</a>
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <div class="footer-menu">
-                            <a href="">Home</a>
-                            <a href="">Cookies</a>
-                            <a href="">Help</a>
-                            <a href="">FQAs</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <!-- Footer End -->
-
 
     <!-- Back to Top -->
     <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
     </div>
 
     <!-- JavaScript Libraries -->
-    <script src="{{ asset('assets/guest/https://code.jquery.com/jquery-3.4.1.min.js') }}"></script>
-    <script src="{{ asset('assets/guest/https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js') }}">
-    </script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('assets/guest/lib/wow/wow.min.js') }}"></script>
     <script src="{{ asset('assets/guest/lib/easing/easing.min.js') }}"></script>
     <script src="{{ asset('assets/guest/lib/waypoints/waypoints.min.js') }}"></script>
@@ -314,7 +292,7 @@
     <script src="{{ asset('assets/guest/lib/tempusdominus/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/guest/lib/tempusdominus/js/moment-timezone.min.js') }}"></script>
     <script src="{{ asset('assets/guest/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Template Javascript -->
     <script src="{{ asset('assets/guest/js/main.js') }}"></script>
 
