@@ -521,3 +521,13 @@
         height: 260px;
     }
 }
+
+select.form-control {
+    color: #ffffff;
+    background-color: #374151;
+}
+
+select.form-control option {
+    color: #ffffff;
+    background-color: #374151;
+}

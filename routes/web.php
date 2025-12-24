@@ -31,9 +31,32 @@ Route::post('/login', function (Request $request) {
     return back()->with('error', 'Email atau password salah.');
 })->name('login.process');
 
+/* ================= REGISTER ================= */
+
 Route::get('/register', function () {
     return view('pages.user.register');
 })->name('register');
+
+Route::post('/register', function (Request $request) {
+
+    $request->validate([
+        'name'     => ['required', 'string', 'max:255'],
+        'email'    => ['required', 'email', 'unique:users'],
+        'password' => ['required', 'min:6'],
+        'role'     => ['required'], // warga / umkm
+    ]);
+
+    \App\Models\User::create([
+        'name'     => $request->name,
+        'email'    => $request->email,
+        'password' => bcrypt($request->password),
+        'role'     => $request->role,
+    ]);
+
+    return redirect('/login')->with('success', 'Registrasi berhasil, silakan login.');
+})->name('register.process');
+
+/* ================= LOGOUT ================= */
 
 Route::post('/logout', function (Request $request) {
     Auth::logout();
@@ -66,7 +89,7 @@ Route::get('/produk/{id}', [DashboardController::class, 'detailProduk'])
 | WARGA (ROLE = warga)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', 'role:warga'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     Route::get('/ulasan/create', [UlasanProdukController::class, 'create'])
         ->name('ulasan.create');
