@@ -155,20 +155,14 @@
                         <div class="card shadow-sm border-0 rounded-4">
                             <div class="card-body p-4">
 
-                                <!-- optional thumbnails (up to 3) -->
                                 @php
-                                    // if controller eager-loaded medias -> use $item->medias
-                                    $medias = $item->medias ?? collect();
+                                    $media = $item->medias->first();
                                 @endphp
 
-                                @if ($medias->count())
-                                    <div class="d-flex justify-content-center gap-2 mb-3">
-                                        @foreach ($medias->take(3) as $m)
-                                            <img src="{{ asset('storage/media/ulasan_produk/' . $m->file_name) }}"
-                                                alt="{{ $m->caption ?? '' }}"
-                                                style="width:60px; height:45px; object-fit:cover; border-radius:6px;">
-                                        @endforeach
-                                    </div>
+                                @if ($media)
+                                    <img src="{{ asset('storage/media/ulasan_produk/' . $media->file_name) }}"
+                                        alt="{{ $media->caption ?? '' }}" class="img-fluid mb-3 rounded"
+                                        style="width:100%; height:180px; object-fit:cover;">
                                 @endif
 
                                 <!-- Icon -->
@@ -199,20 +193,20 @@
                                 </p>
 
                                 <!-- Tombol aksi -->
-                                <div class="text-center">
+                                <div class="text-center mt-2">
                                     @auth
-                                        @if (auth()->user()->role === 'warga' && auth()->user()->id == $item->warga_id)
+                                        @if (in_array(auth()->user()->role, ['admin', 'petugas']))
                                             <a href="{{ route('ulasan.edit', $item->ulasan_id) }}"
-                                                class="btn btn-sm btn-primary">
+                                                class="btn btn-sm btn-warning me-1">
                                                 Edit
                                             </a>
 
                                             <form action="{{ route('ulasan.destroy', $item->ulasan_id) }}" method="POST"
-                                                class="d-inline">
+                                                class="d-inline"
+                                                onsubmit="return confirm('Yakin ingin menghapus ulasan ini?')">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger"
-                                                    onclick="return confirm('Yakin ingin menghapus ulasan ini?')">
+                                                <button type="submit" class="btn btn-sm btn-danger">
                                                     Hapus
                                                 </button>
                                             </form>

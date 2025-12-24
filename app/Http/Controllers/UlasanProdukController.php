@@ -30,7 +30,7 @@ class UlasanProdukController extends Controller
     // ============================
     public function create()
     {
-        $produk = Produk::all();
+        $produk = \App\Models\Produk::all();
         return view('pages.ulasan.create', compact('produk'));
     }
 
