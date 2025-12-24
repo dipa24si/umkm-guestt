@@ -9,7 +9,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" type="image/jpeg" href="{{ asset('assets/guest/img/favicon.jpg') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
@@ -62,7 +64,8 @@
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
             <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
-                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM" style="height: 40px;" class="me-2">
+                <img src="{{ asset('assets/guest/img/logo/logo-umkm-vertikal.jpg') }}" alt="Logo UMKM" class="mb-2"
+                    style="max-height:40px;">
                 <h1 class="text-primary m-0">UMKM</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -128,7 +131,8 @@
                         <select name="produk_id" class="form-select" required>
                             <option value="">-- Pilih Produk --</option>
                             @foreach ($produk_id as $p)
-                                <option value="{{ $p->produk_id }}" {{ old('produk_id') == $p->produk_id ? 'selected' : '' }}>
+                                <option value="{{ $p->produk_id }}"
+                                    {{ old('produk_id') == $p->produk_id ? 'selected' : '' }}>
                                     {{ $p->nama_produk }}
                                 </option>
                             @endforeach
@@ -141,7 +145,8 @@
                         <select name="warga_id" class="form-select" required>
                             <option value="">-- Pilih Warga --</option>
                             @foreach ($warga_id as $w)
-                                <option value="{{ $w->warga_id }}" {{ old('warga_id') == $w->warga_id ? 'selected' : '' }}>
+                                <option value="{{ $w->warga_id }}"
+                                    {{ old('warga_id') == $w->warga_id ? 'selected' : '' }}>
                                     {{ $w->nama }} ({{ $w->no_ktp }})
                                 </option>
                             @endforeach
@@ -170,7 +175,8 @@
                     <!-- FOTO -->
                     <div class="mb-3">
                         <label class="form-label">Foto (boleh lebih dari 1)</label>
-                        <input type="file" name="files[]" id="filesInputCreate" multiple accept="image/*" class="form-control">
+                        <input type="file" name="files[]" id="filesInputCreate" multiple accept="image/*"
+                            class="form-control">
                         <div id="previewCreate" class="d-flex flex-wrap gap-2 mt-2"></div>
                     </div>
 

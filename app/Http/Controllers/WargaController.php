@@ -1,8 +1,10 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Warga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class WargaController extends Controller
 {
@@ -11,24 +13,16 @@ class WargaController extends Controller
      */
     public function index(Request $request)
     {
-        //$warga = Warga::all();
-        //return view('pages.warga.index', compact('warga'));
-
-        //$warga = Warga::paginate(10); // PAGINATION
-        //return view('pages.warga.index', compact('warga'));
-
-        $filterableColumns = ['jenis_kelamin'];  // untuk select filter
-        $searchableColumns = ['nama', 'no_ktp']; // kolom yang bisa di-search
+        $filterableColumns = ['jenis_kelamin'];
+        $searchableColumns = ['nama', 'no_ktp'];
 
         $warga = Warga::query()
             ->filter($request, $filterableColumns)
             ->search($request->search, $searchableColumns)
             ->paginate(10)
-            ->onEachSide(1)
-            ->withQueryString(); // supaya filter + search tetap ada saat ganti halaman
+            ->withQueryString();
 
         return view('pages.warga.index', compact('warga'));
-
     }
 
     /**
@@ -44,7 +38,6 @@ class WargaController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi data
         $request->validate([
             'no_ktp'        => 'required|unique:warga,no_ktp|max:20',
             'nama'          => 'required|string|max:100',
@@ -53,21 +46,22 @@ class WargaController extends Controller
             'pekerjaan'     => 'required|string|max:100',
             'telp'          => 'nullable|string|max:20',
             'email'         => 'nullable|email|max:100',
+            'foto'          => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        // Simpan ke database
-        Warga::create($request->all());
+        $data = $request->except('foto');
 
-        // Redirect kembali ke halaman daftar warga
-        return redirect()->route('warga.index')->with('success', 'Data warga berhasil ditambahkan!');
-    }
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $namaFile = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('warga', $namaFile, 'public');
+            $data['foto'] = 'warga/' . $namaFile;
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+        Warga::create($data);
+
+        return redirect()->route('warga.index')
+            ->with('success', 'Data warga berhasil ditambahkan');
     }
 
     /**
@@ -85,8 +79,26 @@ class WargaController extends Controller
     public function update(Request $request, string $id)
     {
         $warga = Warga::findOrFail($id);
-        $warga->update($request->all());
-        return redirect()->route('warga.index')->with('success', 'Data berhasil diperbarui!');
+
+        $data = $request->except('foto');
+
+        if ($request->hasFile('foto')) {
+
+            // hapus foto lama
+            if ($warga->foto && Storage::disk('public')->exists($warga->foto)) {
+                Storage::disk('public')->delete($warga->foto);
+            }
+
+            $file = $request->file('foto');
+            $namaFile = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('warga', $namaFile, 'public');
+            $data['foto'] = 'warga/' . $namaFile;
+        }
+
+        $warga->update($data);
+
+        return redirect()->route('warga.index')
+            ->with('success', 'Data warga berhasil diperbarui');
     }
 
     /**
@@ -95,7 +107,14 @@ class WargaController extends Controller
     public function destroy(string $id)
     {
         $warga = Warga::findOrFail($id);
+
+        if ($warga->foto && Storage::disk('public')->exists($warga->foto)) {
+            Storage::disk('public')->delete($warga->foto);
+        }
+
         $warga->delete();
-        return redirect()->route('warga.index')->with('success', 'Warga dihapus!');
+
+        return redirect()->route('warga.index')
+            ->with('success', 'Data warga berhasil dihapus');
     }
 }

@@ -24,6 +24,7 @@ class Warga extends Model
         'pekerjaan',
         'telp',
         'email',
+        'foto',
     ];
 
     // Jika tidak ingin pakai timestamps (created_at & updated_at)
@@ -40,10 +41,10 @@ class Warga extends Model
 
         return $query;
     }
-     // Scope search
-     public function scopeSearch($query, ?string $search, array $searchableColumns)
+    // Scope search
+    public function scopeSearch($query, ?string $search, array $searchableColumns)
     {
-        if (!$search) {
+        if (! $search) {
             return $query;
         }
 

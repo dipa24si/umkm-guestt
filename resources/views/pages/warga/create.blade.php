@@ -49,8 +49,8 @@
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
             <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
-                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM"
-                    style="height: 40px; width: auto;" class="me-2">
+                <img src="{{ asset('assets/guest/img/logo/logo-umkm-vertikal.jpg') }}" alt="Logo UMKM" class="mb-2"
+                    style="max-height:40px;">
                 <h1 class="text-primary m-0">UMKM</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -130,8 +130,15 @@
             <div class="card-body">
                 <h3 class="text-center mb-4 text-primary">Tambah Data Warga</h3>
 
-                <form action="{{ route('warga.store') }}" method="POST">
+                <form action="{{ route('warga.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
+
+                    {{-- FOTO --}}
+                    <div class="mb-3">
+                        <label class="form-label">Foto Warga</label>
+                        <input type="file" name="foto" class="form-control" accept="image/*">
+                        <small class="text-muted">Opsional. Jika tidak diisi, akan memakai foto default.</small>
+                    </div>
 
                     <div class="mb-3">
                         <label for="no_ktp" class="form-label">No KTP</label>
@@ -180,7 +187,6 @@
             </div>
         </div>
     </div>
-
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">

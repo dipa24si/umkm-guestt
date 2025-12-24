@@ -48,39 +48,77 @@
     <!-- Navbar & Hero Start -->
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
-            <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
-                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM"
-                    style="height: 40px; width: auto;" class="me-2">
-                <h1 class="text-primary m-0">UMKM</h1>
+            <img src="{{ asset('assets/guest/img/logo/logo-umkm-vertikal.jpg') }}" alt="Logo UMKM" class="mb-2"
+                style="max-height:40px;">
+            <h1 class="text-primary m-0">UMKM</h1>
             </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                 <span class="fa fa-bars"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <div class="navbar-nav ms-auto py-0 pe-4">
+
+                    {{-- MENU PUBLIK --}}
                     <a href="{{ route('dashboard') }}"
-                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Home</a>
+                        class="nav-item nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        Home
+                    </a>
 
                     <a href="{{ route('about') }}"
-                        class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">About</a>
+                        class="nav-item nav-link {{ request()->routeIs('about') ? 'active' : '' }}">
+                        About
+                    </a>
 
                     <a href="{{ route('warga.index') }}"
-                        class="nav-item nav-link {{ request()->routeIs('warga.*') ? 'active' : '' }}">Warga</a>
+                        class="nav-item nav-link {{ request()->routeIs('warga.*') ? 'active' : '' }}">
+                        Warga
+                    </a>
 
                     <a href="{{ route('ulasan.index') }}"
-                        class="nav-item nav-link {{ request()->routeIs('ulasan.*') ? 'active' : '' }}">Ulasan</a>
+                        class="nav-item nav-link {{ request()->routeIs('ulasan.*') ? 'active' : '' }}">
+                        Ulasan
+                    </a>
 
-                    {{-- guest: tampilkan Login & Register --}}
+                    {{-- GUEST --}}
                     @guest
                         <a href="{{ route('login') }}" class="nav-item nav-link">Login</a>
                         <a href="{{ route('register') }}" class="nav-item nav-link">Register</a>
                     @endguest
 
-                    {{-- sudah login: tampilkan nama user + dropdown logout --}}
+                    {{-- WARGA --}}
                     @auth
-                        <div class="nav-item dropdown user-dropdown">
+                        @if (auth()->user()->role === 'warga')
+                            <a href="{{ route('ulasan.create') }}" class="nav-item nav-link">
+                                Tulis Ulasan
+                            </a>
+                        @endif
+                    @endauth
+
+                    {{-- UMKM --}}
+                    @auth
+                        @if (auth()->user()->role === 'umkm')
+                            <a href="/produk/create" class="nav-item nav-link">
+                                Tambah Produk
+                            </a>
+                        @endif
+                    @endauth
+
+                    {{-- ADMIN --}}
+                    @auth
+                        @if (auth()->user()->role === 'admin')
+                            <a href="/umkm" class="nav-item nav-link">
+                                Kelola UMKM
+                            </a>
+                        @endif
+                    @endauth
+
+                    {{-- USER DROPDOWN --}}
+                    @auth
+                        <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle text-uppercase" data-bs-toggle="dropdown">
-                                {{ auth()->user()->name }}
+                                {{ auth()->user()->name ?? auth()->user()->email }}
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
                                 <form action="{{ route('logout') }}" method="POST" class="m-0">
@@ -92,10 +130,13 @@
                             </div>
                         </div>
                     @endauth
+
+                    {{-- CONTACT --}}
                     <a href="https://wa.me/6281234567890?text=Halo%20saya%20mau%20bertanya%20tentang%20UMKM"
                         target="_blank" class="nav-item nav-link">
                         Contact
                     </a>
+
                 </div>
             </div>
         </nav>
@@ -134,6 +175,122 @@
         </div>
     </div>
     <!-- Navbar & Hero End -->
+
+    <!-- SLIDESHOW UMKM START -->
+    <div class="container-xxl py-5 bg-white">
+        <div class="container">
+
+            <div class="text-center mb-4">
+                <h5 class="text-primary fw-normal">Galeri UMKM</h5>
+                <h2 class="fw-bold">Produk & Aktivitas UMKM Indonesia</h2>
+            </div>
+
+            <div id="slideshowUMKM" class="carousel slide" data-bs-ride="carousel">
+
+                <!-- INDICATOR -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#slideshowUMKM" data-bs-slide-to="0"
+                        class="active"></button>
+                    <button type="button" data-bs-target="#slideshowUMKM" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#slideshowUMKM" data-bs-slide-to="2"></button>
+                </div>
+
+                <!-- SLIDE -->
+                <div class="carousel-inner rounded shadow">
+
+                    <div class="carousel-item active">
+                        <img src="{{ asset('assets/guest/img/slider/slider-1.jpg') }}"
+                            class="d-block w-100 slide-putih" alt="UMKM Indonesia">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="{{ asset('assets/guest/img/slider/slider-2.jpg') }}"
+                            class="d-block w-100 slide-putih" alt="Produk Lokal">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="{{ asset('assets/guest/img/slider/slider-3.jpg') }}"
+                            class="d-block w-100 slide-putih" alt="Kuliner Nusantara">
+                    </div>
+
+                </div>
+
+                <!-- PANAH -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#slideshowUMKM"
+                    data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+
+                <button class="carousel-control-next" type="button" data-bs-target="#slideshowUMKM"
+                    data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- SLIDESHOW UMKM END -->
+
+    <!-- IDENTITAS PENGEMBANG START -->
+    <div class="container-xxl py-5 bg-white">
+        <div class="container">
+
+            <div class="text-center mb-5">
+                <h5 class="text-primary fw-normal">Profil Pengembang</h5>
+                <h2 class="fw-bold">Identitas Pengembang Aplikasi</h2>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow text-center p-4">
+
+                        <!-- FOTO ASLI -->
+                        <img src="{{ asset('assets/guest/img/developer/foto-saya.jpg') }}"
+                            class="rounded-circle mx-auto mb-3"
+                            style="width: 150px; height: 150px; object-fit: cover;" alt="Foto Pengembang">
+
+                        <!-- NAMA -->
+                        <h4 class="fw-bold mb-1">Dipa Tranggana</h4>
+
+                        <!-- NIM & PRODI -->
+                        <p class="text-muted mb-1">NIM: 2457301036</p>
+                        <p class="text-muted mb-3">
+                            Program Studi Sistem Informasi
+                            <br>
+                            Politeknik Caltex Riau
+                        </p>
+
+                        <!-- DESKRIPSI -->
+                        <p class="small text-muted">
+                            Pengembang aplikasi UMKM berbasis web menggunakan Laravel
+                            sebagai bagian dari tugas mata kuliah Framework.
+                        </p>
+
+                        <!-- SOSIAL MEDIA -->
+                        <div class="d-flex justify-content-center gap-3 mt-3">
+
+                            <a href="https://www.linkedin.com/in/dipa-tranggana-352054395" target="_blank"
+                                class="btn btn-outline-primary btn-sm rounded-circle" title="LinkedIn">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+
+                            <a href="https://github.com/dipa24si" target="_blank"
+                                class="btn btn-outline-dark btn-sm rounded-circle" title="GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+
+                            <a href="https://instagram.com/yoowdip" target="_blank"
+                                class="btn btn-outline-danger btn-sm rounded-circle" title="Instagram">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- IDENTITAS PENGEMBANG END -->
 
     <div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">

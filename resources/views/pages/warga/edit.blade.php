@@ -49,8 +49,8 @@
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
             <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
-                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM"
-                    style="height: 40px; width: auto;" class="me-2">
+                <img src="{{ asset('assets/guest/img/logo/logo-umkm-vertikal.jpg') }}" alt="Logo UMKM" class="mb-2"
+                    style="max-height:40px;">
                 <h1 class="text-primary m-0">UMKM</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -129,59 +129,71 @@
         <div class="card shadow-lg border-0 rounded-4">
             <div class="card-body">
                 <h3 class="text-center mb-4 text-primary">Edit Data Warga</h3>
+                <div class="text-center mb-4">
+                    <img src="{{ $warga->foto ? asset('storage/' . $warga->foto) : asset('assets/guest/img/placeholder.png') }}"
+                        class="rounded-circle border shadow-sm" style="width:120px; height:120px; object-fit:cover;">
+                    <p class="small text-muted mt-2">Foto Warga</p>
+                </div>
 
-                <form action="{{ route('warga.update', $warga->warga_id) }}" method="POST">
+                <form action="{{ route('warga.update', $warga->warga_id) }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
                     <div class="mb-3">
-                        <label for="no_ktp" class="form-label">No KTP</label>
-                        <input type="text" name="no_ktp" id="no_ktp" class="form-control"
-                            value="{{ $warga->no_ktp }}" required>
+                        <label class="form-label">Ganti Foto Warga</label>
+                        <input type="file" name="foto" class="form-control" accept="image/*">
+                        <small class="text-muted">Kosongkan jika tidak ingin mengganti foto</small>
                     </div>
 
                     <div class="mb-3">
-                        <label for="nama" class="form-label">Nama Lengkap</label>
-                        <input type="text" name="nama" id="nama" class="form-control"
-                            value="{{ $warga->nama }}" required>
+                        <label class="form-label">No KTP</label>
+                        <input type="text" name="no_ktp" class="form-control" value="{{ $warga->no_ktp }}"
+                            required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                        <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required>
+                        <label class="form-label">Nama Lengkap</label>
+                        <input type="text" name="nama" class="form-control" value="{{ $warga->nama }}"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Jenis Kelamin</label>
+                        <select name="jenis_kelamin" class="form-select" required>
                             <option value="Laki-laki" {{ $warga->jenis_kelamin == 'Laki-laki' ? 'selected' : '' }}>
-                                Laki-laki</option>
+                                Laki-laki
+                            </option>
                             <option value="Perempuan" {{ $warga->jenis_kelamin == 'Perempuan' ? 'selected' : '' }}>
-                                Perempuan</option>
+                                Perempuan
+                            </option>
                         </select>
                     </div>
 
                     <div class="mb-3">
-                        <label for="agama" class="form-label">Agama</label>
-                        <input type="text" name="agama" id="agama" class="form-control"
-                            value="{{ $warga->agama }}" required>
+                        <label class="form-label">Agama</label>
+                        <input type="text" name="agama" class="form-control" value="{{ $warga->agama }}"
+                            required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="pekerjaan" class="form-label">Pekerjaan</label>
-                        <input type="text" name="pekerjaan" id="pekerjaan" class="form-control"
+                        <label class="form-label">Pekerjaan</label>
+                        <input type="text" name="pekerjaan" class="form-control"
                             value="{{ $warga->pekerjaan }}">
                     </div>
 
                     <div class="mb-3">
-                        <label for="telp" class="form-label">No Telepon</label>
-                        <input type="text" name="telp" id="telp" class="form-control"
-                            value="{{ $warga->telp }}">
+                        <label class="form-label">No Telepon</label>
+                        <input type="text" name="telp" class="form-control" value="{{ $warga->telp }}">
                     </div>
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control"
-                            value="{{ $warga->email }}">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="email" class="form-control" value="{{ $warga->email }}">
                     </div>
 
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary px-4">Update</button>
+                        <button class="btn btn-primary px-4">Update</button>
                         <a href="{{ route('warga.index') }}" class="btn btn-secondary px-4">Batal</a>
                     </div>
                 </form>

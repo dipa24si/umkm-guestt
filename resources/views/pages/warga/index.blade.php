@@ -49,8 +49,8 @@
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
             <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
-                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM"
-                    style="height: 40px; width: auto;" class="me-2">
+                <img src="{{ asset('assets/guest/img/logo/logo-umkm-vertikal.jpg') }}" alt="Logo UMKM" class="mb-2"
+                    style="max-height:40px;">
                 <h1 class="text-primary m-0">UMKM</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -180,51 +180,71 @@
                 </div>
             </form>
 
-            <div class="row g-4">
+            <div class="row g-4 mt-4">
+
                 @forelse ($warga as $item)
-                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="card shadow-sm border-0 rounded-4">
-                            <div class="card-body text-center p-4">
-                                <div class="mb-3">
-                                    <i class="fa fa-user fa-3x text-primary"></i>
-                                </div>
-                                <h5 class="card-title mb-2">{{ $item->nama }}</h5>
-                                <p class="text-muted mb-1">No. KTP: {{ $item->no_ktp }}</p>
-                                <p class="text-muted mb-1">{{ $item->jenis_kelamin }} - {{ $item->agama }}</p>
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
 
-                                @if ($item->pekerjaan)
-                                    <p class="text-muted mb-2">{{ $item->pekerjaan }}</p>
-                                @endif
+                        <div class="card shadow-sm border-0 rounded-4 h-100">
+                            <div class="card-body text-center p-4 d-flex flex-column align-items-center">
 
+                                {{-- FOTO --}}
+                                <img src="{{ $item->foto ? asset('storage/' . $item->foto) : asset('assets/guest/img/placeholder.png') }}"
+                                    class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;">
+
+                                {{-- NAMA --}}
+                                <h5 class="fw-bold mb-1">{{ $item->nama }}</h5>
+
+                                {{-- INFO --}}
+                                <p class="text-muted small mb-1">
+                                    No. KTP: {{ $item->no_ktp }}
+                                </p>
+
+                                <p class="text-muted small mb-1">
+                                    {{ $item->jenis_kelamin }} - {{ $item->agama }}
+                                </p>
+
+                                <p class="text-muted small mb-3">
+                                    {{ $item->pekerjaan }}
+                                </p>
+
+                                {{-- KONTAK --}}
                                 @if ($item->email)
-                                    <p class="small text-secondary mb-2">
-                                        <i class="fa fa-envelope"></i> {{ $item->email }}
+                                    <p class="small mb-1">
+                                        <i class="fa fa-envelope me-1"></i>{{ $item->email }}
                                     </p>
                                 @endif
 
                                 @if ($item->telp)
-                                    <p class="small text-secondary mb-3">
-                                        <i class="fa fa-phone"></i> {{ $item->telp }}
+                                    <p class="small mb-3">
+                                        <i class="fa fa-phone me-1"></i>{{ $item->telp }}
                                     </p>
                                 @endif
 
-                                <a href="{{ route('warga.edit', $item->warga_id) }}"
-                                    class="btn btn-sm btn-primary">Edit</a>
-                                <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST"
-                                    class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Yakin ingin menghapus warga ini?')">
-                                        Hapus
-                                    </button>
-                                </form>
+                                {{-- BUTTON --}}
+                                <div class="mt-auto w-100">
+                                    <a href="{{ route('warga.edit', $item->warga_id) }}"
+                                        class="btn btn-warning btn-sm w-100 mb-2">
+                                        EDIT
+                                    </a>
+
+                                    <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST"
+                                        onsubmit="return confirm('Yakin hapus data ini?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-danger btn-sm w-100">
+                                            HAPUS
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 @empty
                     <div class="col-12 text-center">
-                        <p class="text-muted">Belum ada data warga yang ditambahkan.</p>
+                        <p class="text-muted">
+                            Belum ada data warga yang ditambahkan.
+                        </p>
                     </div>
                 @endforelse
             </div>

@@ -1,12 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\Produk;
-use App\Models\Warga;
-use App\Models\UlasanProduk;
+
 use App\Models\Media;
+use App\Models\Produk;
+use App\Models\UlasanProduk;
+use App\Models\Warga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
@@ -41,39 +42,43 @@ class UlasanProdukController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'produk_id' => ['required','integer', Rule::exists('produk','produk_id')],
-            'warga_id'  => ['required','integer', Rule::exists('warga','warga_id')],
+            'produk_id' => ['required', 'integer', Rule::exists('produk', 'produk_id')],
             'rating'    => 'required|integer|min:1|max:5',
             'komentar'  => 'required|string',
-            'files.*'   => 'nullable|image|max:5120'
+            'files.*'   => 'nullable|image|max:5120',
         ]);
+
+        // 🔥 AMBIL WARGA DARI USER LOGIN
+        $warga = Warga::where('email', Auth::user()->email)->first();
+
+        if (! $warga) {
+            abort(403, 'Data warga tidak ditemukan untuk user ini');
+        }
 
         $ulasan = UlasanProduk::create([
             'produk_id' => $validated['produk_id'],
-            'warga_id'  => $validated['warga_id'],
+            'warga_id'  => $warga->warga_id,
             'rating'    => $validated['rating'],
             'komentar'  => $validated['komentar'],
         ]);
 
-        // Upload foto
+        // upload foto (tetap sama)
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $index => $file) {
-
-                $name = Str::random(20).'.'.$file->getClientOriginalExtension();
-
+                $name = Str::random(20) . '.' . $file->getClientOriginalExtension();
                 $file->storeAs('media/ulasan_produk', $name, 'public');
 
                 Media::create([
-                    'ref_table' => 'ulasan_produk',
-                    'ref_id'    => $ulasan->ulasan_id,
-                    'file_name' => $name,
-                    'mime'      => $file->getClientMimeType(),
-                    'sort_order'=> $index,
+                    'ref_table'  => 'ulasan_produk',
+                    'ref_id'     => $ulasan->ulasan_id,
+                    'file_name'  => $name,
+                    'mime'       => $file->getClientMimeType(),
+                    'sort_order' => $index,
                 ]);
             }
         }
 
-        return redirect()->route('ulasan.index')->with('success','Ulasan berhasil ditambahkan!');
+        return redirect()->route('ulasan.index')->with('success', 'Ulasan berhasil ditambahkan!');
     }
 
     // ============================
@@ -81,16 +86,20 @@ class UlasanProdukController extends Controller
     // ============================
     public function edit($id)
     {
-        $ulasan = UlasanProduk::findOrFail($id);
-        $produk_id = Produk::all();
-        $warga = Warga::all();
+        $ulasan = UlasanProduk::with('warga')->findOrFail($id);
 
-        $ulasanMedia = Media::where('ref_table','ulasan_produk')
-            ->where('ref_id',$ulasan->ulasan_id)
-            ->orderBy('sort_order','asc')
+        if ($ulasan->warga->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak berhak mengubah ulasan ini');
+        }
+
+        $produk = Produk::all();
+
+        $ulasanMedia = Media::where('ref_table', 'ulasan_produk')
+            ->where('ref_id', $ulasan->ulasan_id)
+            ->orderBy('sort_order')
             ->get();
 
-        return view('pages.ulasan.edit', compact('ulasan','produk_id','warga','ulasanMedia'));
+        return view('pages.ulasan.edit', compact('ulasan', 'produk', 'ulasanMedia'));
     }
 
     // ============================
@@ -98,18 +107,26 @@ class UlasanProdukController extends Controller
     // ============================
     public function update(Request $request, $id)
     {
-        $ulasan = UlasanProduk::findOrFail($id);
+        $ulasan = UlasanProduk::with('warga')->findOrFail($id);
 
-        $validated = $request->validate([
-            'produk_id' => ['required','integer', Rule::exists('produk','produk_id')],
-            'warga_id'  => ['required','integer', Rule::exists('warga','warga_id')],
+        if ($ulasan->warga->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'produk_id' => ['required', Rule::exists('produk', 'produk_id')],
             'rating'    => 'required|integer|min:1|max:5',
             'komentar'  => 'required|string',
         ]);
 
-        $ulasan->update($validated);
+        $ulasan->update([
+            'produk_id' => $request->produk_id,
+            'rating'    => $request->rating,
+            'komentar'  => $request->komentar,
+        ]);
 
-        return redirect()->route('ulasan.index')->with('success','Ulasan berhasil diperbarui!');
+        return redirect()->route('ulasan.index')
+            ->with('success', 'Ulasan berhasil diperbarui!');
     }
 
     // ============================
@@ -120,31 +137,31 @@ class UlasanProdukController extends Controller
         $ulasan = UlasanProduk::findOrFail($id);
 
         $request->validate([
-            'files.*' => 'image|max:5120'
+            'files.*' => 'image|max:5120',
         ]);
 
-        $currentMaxSort = Media::where('ref_table','ulasan_produk')
-            ->where('ref_id',$ulasan->ulasan_id)
+        $currentMaxSort = Media::where('ref_table', 'ulasan_produk')
+            ->where('ref_id', $ulasan->ulasan_id)
             ->max('sort_order');
 
         $currentMaxSort = $currentMaxSort === null ? 0 : $currentMaxSort + 1;
 
         foreach ($request->file('files', []) as $file) {
 
-            $name = Str::random(20).'.'.$file->getClientOriginalExtension();
+            $name = Str::random(20) . '.' . $file->getClientOriginalExtension();
 
             $file->storeAs('media/ulasan_produk', $name, 'public');
 
             Media::create([
-                'ref_table' => 'ulasan_produk',
-                'ref_id'    => $ulasan->ulasan_id,
-                'file_name' => $name,
-                'mime'      => $file->getClientMimeType(),
-                'sort_order'=> $currentMaxSort++,
+                'ref_table'  => 'ulasan_produk',
+                'ref_id'     => $ulasan->ulasan_id,
+                'file_name'  => $name,
+                'mime'       => $file->getClientMimeType(),
+                'sort_order' => $currentMaxSort++,
             ]);
         }
 
-        return back()->with('success','Foto baru berhasil diupload!');
+        return back()->with('success', 'Foto baru berhasil diupload!');
     }
 
     // ============================
@@ -152,22 +169,25 @@ class UlasanProdukController extends Controller
     // ============================
     public function destroy($id)
     {
-        $ulasan = UlasanProduk::findOrFail($id);
+        $ulasan = UlasanProduk::with('warga')->findOrFail($id);
 
-        $medias = Media::where('ref_table','ulasan_produk')
-            ->where('ref_id',$ulasan->ulasan_id)
+        if ($ulasan->warga->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        $medias = Media::where('ref_table', 'ulasan_produk')
+            ->where('ref_id', $ulasan->ulasan_id)
             ->get();
 
         foreach ($medias as $m) {
-            if (Storage::disk('public')->exists("media/ulasan_produk/$m->file_name")) {
-                Storage::disk('public')->delete("media/ulasan_produk/$m->file_name");
-            }
+            Storage::disk('public')->delete("media/ulasan_produk/$m->file_name");
             $m->delete();
         }
 
         $ulasan->delete();
 
-        return redirect()->route('ulasan.index')->with('success','Ulasan berhasil dihapus!');
+        return redirect()->route('ulasan.index')
+            ->with('success', 'Ulasan berhasil dihapus!');
     }
 
     // ============================
@@ -183,6 +203,6 @@ class UlasanProdukController extends Controller
 
         $m->delete();
 
-        return back()->with('success','Foto berhasil dihapus');
+        return back()->with('success', 'Foto berhasil dihapus');
     }
 }

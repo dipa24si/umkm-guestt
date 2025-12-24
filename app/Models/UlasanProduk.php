@@ -28,7 +28,7 @@ class UlasanProduk extends Model
     // Relasi ke Warga / User (opsional)
     public function warga()
     {
-        return $this->belongsTo(User::class, 'warga_id');
+        return $this->belongsTo(Warga::class, 'warga_id', 'warga_id');
     }
 
     public function medias()

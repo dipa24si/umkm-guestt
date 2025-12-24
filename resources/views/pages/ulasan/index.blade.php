@@ -37,8 +37,8 @@
     <div class="container-xxl position-relative p-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 px-lg-5 py-3 py-lg-0">
             <a href="{{ url('/') }}" class="navbar-brand p-0 d-flex align-items-center">
-                <img src="{{ asset('assets/guest/img/favicon.jpg') }}" alt="Logo UMKM"
-                    style="height: 40px; width: auto;" class="me-2">
+                <img src="{{ asset('assets/guest/img/logo/logo-umkm-vertikal.jpg') }}" alt="Logo UMKM" class="mb-2"
+                    style="max-height:40px;">
                 <h1 class="text-primary m-0">UMKM</h1>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -130,11 +130,23 @@
             </div>
 
             <div class="text-center mb-4">
-                @auth
-                    <a href="{{ route('ulasan.create') }}" class="btn btn-success">
-                        <i class="fa fa-plus"></i> Tambah Ulasan
-                    </a>
-                @endauth
+                {{-- TOMBOL TAMBAH ULASAN --}}
+                @if (\Illuminate\Support\Facades\Auth::check())
+                    <div class="text-center mb-4">
+                        <a href="{{ url('/ulasan/create') }}" class="btn btn-success">
+                            <i class="fa fa-plus me-1"></i> Tambah Ulasan
+                        </a>
+                    </div>
+                @else
+                    <div class="text-center mb-4">
+                        <p class="text-muted">
+                            Login terlebih dahulu untuk menulis ulasan
+                        </p>
+                        <a href="{{ route('login') }}" class="btn btn-outline-primary">
+                            Login
+                        </a>
+                    </div>
+                @endif
             </div>
 
             <div class="row g-4">
@@ -181,27 +193,31 @@
                                 <p class="small text-muted mb-2">"{{ $item->komentar }}"</p>
 
                                 <!-- Nama warga -->
-                                <p class="small text-secondary mb-3">
-                                    <i class="fa fa-user"></i>
+                                <p class="small text-muted">
+                                    <i class="fa fa-user me-1"></i>
                                     {{ $item->warga->nama ?? 'Anonim' }}
                                 </p>
 
                                 <!-- Tombol aksi -->
                                 <div class="text-center">
-                                    <a href="{{ route('ulasan.edit', $item->ulasan_id) }}"
-                                        class="btn btn-sm btn-primary">
-                                        Edit
-                                    </a>
+                                    @auth
+                                        @if (auth()->user()->role === 'warga' && auth()->user()->id == $item->warga_id)
+                                            <a href="{{ route('ulasan.edit', $item->ulasan_id) }}"
+                                                class="btn btn-sm btn-primary">
+                                                Edit
+                                            </a>
 
-                                    <form action="{{ route('ulasan.destroy', $item->ulasan_id) }}" method="POST"
-                                        class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-danger"
-                                            onclick="return confirm('Yakin ingin menghapus ulasan ini?')">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                            <form action="{{ route('ulasan.destroy', $item->ulasan_id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Yakin ingin menghapus ulasan ini?')">
+                                                    Hapus
+                                                </button>
+                                            </form>
+                                        @endif
+                                    @endauth
                                 </div>
 
                             </div>

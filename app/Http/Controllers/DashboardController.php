@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -44,7 +43,12 @@ class DashboardController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $produk = Produk::findOrFail($id);
+
+// pastikan produk milik UMKM yang login
+        if ($produk->umkm_id !== auth()->user()->umkm_id) {
+            abort(403, 'Akses ditolak');
+        }
     }
 
     /**

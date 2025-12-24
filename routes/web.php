@@ -1,59 +1,108 @@
 <?php
 
-use App\Http\Controllers\AboutController;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UlasanProdukController;
 use App\Http\Controllers\WargaController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// ================== HOME ==================
-Route::get('/', function () {
-    return view('pages.dashboard');
+/*
+|--------------------------------------------------------------------------
+| AUTH
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', function () {
+    return view('pages.user.login');
+})->name('login');
+
+Route::post('/login', function (Request $request) {
+
+    $credentials = $request->validate([
+        'email'    => ['required', 'email'],
+        'password' => ['required'],
+    ]);
+
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+        return redirect('/');
+    }
+
+    return back()->with('error', 'Email atau password salah.');
+})->name('login.process');
+
+Route::get('/register', function () {
+    return view('pages.user.register');
+})->name('register');
+
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
+
+/*
+|--------------------------------------------------------------------------
+| PUBLIK
+|--------------------------------------------------------------------------
+*/
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::get('/about', function () {
+    return view('pages.about');
+})->name('about');
+
+Route::resource('warga', WargaController::class);
+
+Route::get('/ulasan', [UlasanProdukController::class, 'index'])
+    ->name('ulasan.index');
+
+Route::get('/produk/{id}', [DashboardController::class, 'detailProduk'])
+    ->name('produk.detail');
+
+/*
+|--------------------------------------------------------------------------
+| WARGA (ROLE = warga)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:warga'])->group(function () {
+
+    Route::get('/ulasan/create', [UlasanProdukController::class, 'create'])
+        ->name('ulasan.create');
+
+    Route::post('/ulasan', [UlasanProdukController::class, 'store'])
+        ->name('ulasan.store');
+
+    Route::get('/ulasan/{id}/edit', [UlasanProdukController::class, 'edit'])
+        ->name('ulasan.edit');
+
+    Route::put('/ulasan/{id}', [UlasanProdukController::class, 'update'])
+        ->name('ulasan.update');
+
+    Route::delete('/ulasan/{id}', [UlasanProdukController::class, 'destroy'])
+        ->name('ulasan.destroy');
 });
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-Route::get('/about', [AboutController::class, 'about'])->name('about');
+/*
+|--------------------------------------------------------------------------
+| UMKM (ROLE = umkm)
+|--------------------------------------------------------------------------
+*/
+Route::middleware(['auth', 'role:umkm'])->group(function () {
 
-// ================== WARGA ==================
-Route::get('/warga', [WargaController::class, 'index'])->name('warga.index');
+    Route::get('/produk/create', [DashboardController::class, 'createProduk'])
+        ->name('produk.create');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/warga/create', [WargaController::class, 'create'])->name('warga.create');
-    Route::post('/warga', [WargaController::class, 'store'])->name('warga.store');
-    Route::get('/warga/{id}/edit', [WargaController::class, 'edit'])->name('warga.edit');
-    Route::put('/warga/{id}', [WargaController::class, 'update'])->name('warga.update');
-    Route::delete('/warga/{id}', [WargaController::class, 'destroy'])->name('warga.destroy');
-});
+    Route::post('/produk', [DashboardController::class, 'storeProduk'])
+        ->name('produk.store');
 
-// ================== AUTH ==================
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.process');
+    Route::get('/produk/{id}/edit', [DashboardController::class, 'editProduk'])
+        ->name('produk.edit');
 
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register'])->name('register.process');
+    Route::put('/produk/{id}', [DashboardController::class, 'updateProduk'])
+        ->name('produk.update');
 
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
-
-// ================== ULASAN ==================
-
-// index → publik
-Route::get('/ulasan', [UlasanProdukController::class, 'index'])->name('ulasan.index');
-
-Route::middleware('auth')->group(function () {
-
-    // CRUD ULASAN
-    Route::get('/ulasan/create', [UlasanProdukController::class, 'create'])->name('ulasan.create');
-    Route::post('/ulasan', [UlasanProdukController::class, 'store'])->name('ulasan.store');
-    Route::get('/ulasan/{id}/edit', [UlasanProdukController::class, 'edit'])->name('ulasan.edit');
-    Route::put('/ulasan/{id}', [UlasanProdukController::class, 'update'])->name('ulasan.update');
-    Route::delete('/ulasan/{id}', [UlasanProdukController::class, 'destroy'])->name('ulasan.destroy');
-
-    // DELETE FOTO SATUAN
-    Route::delete('/ulasan/media/{id}', [UlasanProdukController::class, 'destroyMedia'])
-        ->name('ulasan.media.destroy');
-
-    // 🔥 ROUTE BARU: UPLOAD FOTO TAMBAHAN
-    Route::post('/ulasan/{id}/upload-foto', [UlasanProdukController::class, 'uploadFoto'])
-        ->name('ulasan.uploadFoto');
+    Route::delete('/produk/{id}', [DashboardController::class, 'deleteProduk'])
+        ->name('produk.destroy');
 });
