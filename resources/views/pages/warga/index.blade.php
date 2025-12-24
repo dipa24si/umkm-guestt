@@ -138,14 +138,6 @@
                 <h1 class="mb-5">Daftar Warga Terdaftar</h1>
             </div>
 
-            @auth
-                <div class="text-center mb-4">
-                    <a href="{{ route('warga.create') }}" class="btn btn-success">
-                        <i class="fa fa-plus"></i> Tambah Warga
-                    </a>
-                </div>
-            @endauth
-
             {{-- FORM FILTER + SEARCH --}}
             <form method="GET" action="{{ route('warga.index') }}" class="row justify-content-center mb-4 g-2">
                 {{-- FILTER JENIS KELAMIN --}}
@@ -223,19 +215,21 @@
 
                                 {{-- BUTTON --}}
                                 <div class="mt-auto w-100">
-                                    <a href="{{ route('warga.edit', $item->warga_id) }}"
-                                        class="btn btn-warning btn-sm w-100 mb-2">
-                                        EDIT
-                                    </a>
+                                    @auth
+                                        <a href="{{ route('warga.edit', $item->warga_id) }}"
+                                            class="btn btn-warning btn-sm w-100 mb-2">
+                                            EDIT
+                                        </a>
 
-                                    <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST"
-                                        onsubmit="return confirm('Yakin hapus data ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-danger btn-sm w-100">
-                                            HAPUS
-                                        </button>
-                                    </form>
+                                        <form action="{{ route('warga.destroy', $item->warga_id) }}" method="POST"
+                                            onsubmit="return confirm('Yakin hapus data ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button class="btn btn-danger btn-sm w-100">
+                                                HAPUS
+                                            </button>
+                                        </form>
+                                    @endauth
                                 </div>
                             </div>
                         </div>

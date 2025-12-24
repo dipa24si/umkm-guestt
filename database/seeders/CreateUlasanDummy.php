@@ -11,21 +11,33 @@ class CreateUlasanDummy extends Seeder
     {
         $faker = \Faker\Factory::create('id_ID');
 
-        // Ambil semua produk_id & warga_id agar sesuai FK
         $produkIds = DB::table('produk')->pluck('produk_id')->toArray();
         $wargaIds  = DB::table('warga')->pluck('warga_id')->toArray();
 
-        // Jika salah satu kosong → hentikan agar tidak error
         if (empty($produkIds) || empty($wargaIds)) {
             dd("ISI dulu tabel produk & warga sebelum membuat ulasan dummy!");
         }
 
-        foreach (range(1, 50) as $i) {
+        // 👉 KALIMAT ULASAN BAHASA INDONESIA
+        $komentarIndonesia = [
+            'Produk sangat bagus dan sesuai dengan deskripsi.',
+            'Kualitas produk memuaskan, pengiriman cepat.',
+            'Harga terjangkau dan rasanya enak.',
+            'Produk lokal yang sangat direkomendasikan.',
+            'Pelayanan ramah dan produk berkualitas.',
+            'Kemasan rapi dan aman sampai tujuan.',
+            'Saya puas dengan produk ini.',
+            'Rasanya enak dan cocok untuk keluarga.',
+            'Barang sesuai ekspektasi, akan beli lagi.',
+            'Produk UMKM yang patut didukung.'
+        ];
+
+        foreach (range(1, 100) as $i) {
             DB::table('ulasan')->insert([
                 'produk_id' => $faker->randomElement($produkIds),
                 'warga_id'  => $faker->randomElement($wargaIds),
                 'rating'    => $faker->numberBetween(1, 5),
-                'komentar'  => $faker->sentence(10),
+                'komentar'  => $faker->randomElement($komentarIndonesia),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
