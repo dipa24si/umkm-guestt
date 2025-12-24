@@ -87,15 +87,6 @@
                         <a href="{{ route('register') }}" class="nav-item nav-link">Register</a>
                     @endguest
 
-                    {{-- WARGA --}}
-                    @auth
-                        @if (auth()->user()->role === 'warga')
-                            <a href="{{ route('ulasan.create') }}" class="nav-item nav-link">
-                                Tulis Ulasan
-                            </a>
-                        @endif
-                    @endauth
-
                     {{-- UMKM --}}
                     @auth
                         @if (auth()->user()->role === 'umkm')
